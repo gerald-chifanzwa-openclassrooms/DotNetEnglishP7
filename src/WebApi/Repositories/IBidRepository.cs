@@ -7,5 +7,6 @@ namespace WebApi.Repositories
     public interface IBidRepository
     {
         Task<IReadOnlyCollection<BidList>> Add(BidList bidList);
+        Task<IReadOnlyCollection<BidList>> GetAll();
     }
 }

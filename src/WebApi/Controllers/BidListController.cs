@@ -22,9 +22,10 @@ namespace Dot.Net.WebApi.Controllers
         }
 
         [HttpGet("/")]
-        public IActionResult Home()
+        public async Task<IActionResult> HomeAsync()
         {
-            return View("Home");
+            var bids = await _bidRepository.GetAll();
+            return Ok(bids);
         }
 
         [HttpPost("/bidList/validate")]

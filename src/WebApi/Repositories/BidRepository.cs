@@ -31,5 +31,13 @@ namespace WebApi.Repositories
 
             return await _dbContext.Bids.ToListAsync();
         }
+
+        public async Task<IReadOnlyCollection<BidList>> GetAll()
+        {
+            _logger.LogInformation("Listing bids in the databaase");
+            var bids = await _dbContext.Bids.ToListAsync();
+            return bids;
+        }
+
     }
 }
