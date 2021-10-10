@@ -30,24 +30,20 @@ namespace Dot.Net.WebApi.Controllers
 
         [HttpPost("/bidList/validate")]
         [Authorize]
-        public async Task<IActionResult> Validate([FromBody]CreateBidModel model)
+        public async Task<IActionResult> Validate([FromBody]BidListModel model)
         {
             var bidList = _mapper.Map<BidList>(model);
             var bids = await _bidRepository.Add(bidList);
             return Ok(bids);
         }
 
-        [HttpGet("/bidList/update/{id}")]
-        public IActionResult ShowUpdateForm(int id)
-        {
-            return View("bidList/update");
-        }
 
         [HttpPost("/bidList/update/{id}")]
-        public IActionResult UpdateBid(int id, [FromBody] BidList bidList)
+        public async Task<IActionResult> UpdateBidAsync(int id, [FromBody] BidListModel model)
         {
-            // TODO: check required fields, if valid call service to update Bid and return list Bid
-            return Redirect("/bidList/list");
+            var bidList = _mapper.Map<BidList>(model);
+            var bids = await _bidRepository.Update(id, bidList);
+            return Ok(bids);
         }
 
         [HttpDelete("/bidList/{id}")]

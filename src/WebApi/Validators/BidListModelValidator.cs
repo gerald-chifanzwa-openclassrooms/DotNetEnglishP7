@@ -3,9 +3,9 @@ using WebApi.Models;
 
 namespace WebApi.Validators
 {
-    public class CreateBidModelValidator: AbstractValidator<CreateBidModel>
+    public class BidListModelValidator: AbstractValidator<BidListModel>
     {
-        public CreateBidModelValidator()
+        public BidListModelValidator()
         {
             RuleFor(x => x.Account).NotEmpty();
             RuleFor(x => x.AskAmount).NotEmpty().ValidateAmount();
@@ -17,7 +17,6 @@ namespace WebApi.Validators
             RuleFor(x => x.Commentary).NotEmpty();
             RuleFor(x => x.CreationDate).NotEmpty();
             RuleFor(x => x.CreationName).NotEmpty();
-            RuleFor(x => x.DealName).NotEmpty();
             RuleFor(x => x.DealName).NotEmpty();
             RuleFor(x => x.DealType).NotEmpty();
             RuleFor(x => x.ListDate).NotEmpty();

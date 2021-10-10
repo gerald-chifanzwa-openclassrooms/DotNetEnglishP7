@@ -26,10 +26,10 @@ namespace Dot.Net.WebApi
             services.AddControllers();
             services.AddAutoMapper(config =>
             {
-                config.CreateMap<CreateBidModel, BidList>();
+                config.CreateMap<BidListModel, BidList>();
             });
             services.AddFluentValidation();
-            services.AddTransient<IValidator<CreateBidModel>, CreateBidModelValidator>();
+            services.AddTransient<IValidator<BidListModel>, BidListModelValidator>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

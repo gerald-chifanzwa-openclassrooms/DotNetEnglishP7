@@ -1,8 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Bogus;
 using Dot.Net.WebApi.Data;
 using Dot.Net.WebApi.Domain;
@@ -56,6 +53,32 @@ namespace WebApi.Tests.Repositories
             // Assert
             results.Should().HaveCount(11);
             results.Should().Contain(testBid);
+        }
+
+        [Fact]
+        public void Update_WhenBidExists_ShouldUpdateExistingRecord()
+        {
+            // Arrange
+            InitializeDatabase();
+            var testBid = _bidFaker.Generate();
+            var randomId = new Random().Next(1, 10);
+            BidRepository repository = new(_mockDbContext, new NullLogger<BidRepository>());
+
+            // Act
+            var results = repository.Update(randomId, testBid).GetAwaiter().GetResult();
+
+            // Assert
+            results.Should().HaveCount(10);
+            results.Should().Contain(bid => bid.Id == randomId);
+            var bid = results.FirstOrDefault(bid => bid.Id == randomId);
+            
+            foreach(var property in typeof(BidList).GetProperties().Where(p => p.Name != nameof(BidList.Id)))
+            {
+                var expectedValue = property.GetValue(testBid);
+                var actualValue = property.GetValue(bid);
+            
+                expectedValue.Should().Be(actualValue);
+            }
         }
 
         private void InitializeDatabase()
