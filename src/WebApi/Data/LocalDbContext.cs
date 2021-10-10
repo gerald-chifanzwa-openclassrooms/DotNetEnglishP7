@@ -1,7 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using Dot.Net.WebApi.Domain;
 using Dot.Net.WebApi.Controllers;
-using Dot.Net.WebApi.Controllers.Domain;
 
 namespace Dot.Net.WebApi.Data
 {

@@ -7,6 +7,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using WebApi.Models;
+using WebApi.Repositories;
 using WebApi.Validators;
 
 namespace Dot.Net.WebApi
@@ -28,10 +29,17 @@ namespace Dot.Net.WebApi
             {
                 config.CreateMap<BidListModel, BidList>();
                 config.CreateMap<CurvePointModel, CurvePoint>();
+                config.CreateMap<RatingModel, Rating>();
             });
             services.AddFluentValidation();
+
+            services.AddScoped<IBidRepository, BidRepository>();
+            services.AddScoped<ICurvePointRepository, CurvePointRepository>();
+            services.AddScoped<IRatingRepository, RatingRepository>();
+
             services.AddTransient<IValidator<BidListModel>, BidListModelValidator>();
             services.AddTransient<IValidator<CurvePointModel>, CurvePointModelValidator>();
+            services.AddTransient<IValidator<RatingModel>, RatingModelValidator>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

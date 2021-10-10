@@ -23,7 +23,7 @@ namespace WebApi.Repositories
         {
             if (curvePoint == null) throw new ArgumentNullException(nameof(curvePoint));
 
-            _logger.LogInformation("Adding new point list {@CurvePoint}", curvePoint);
+            _logger.LogInformation("Adding new curve point {@CurvePoint}", curvePoint);
             _dbContext.CurvePoints.Add(curvePoint);
             await _dbContext.SaveChangesAsync();
             _logger.LogInformation("CurvePoint Saved {@CurvePoint}", curvePoint);
@@ -36,7 +36,7 @@ namespace WebApi.Repositories
             if (curvePoint == null) throw new ArgumentNullException(nameof(curvePoint));
 
             var point = await _dbContext.CurvePoints.FirstOrDefaultAsync(b => b.Id == id);
-            if (point == null) throw new BidNotFoundException();
+            if (point == null) throw new EntityNotFoundException();
 
             _logger.LogInformation("Updating curve point {@Point} to {@CurvePoint}", point, curvePoint);
 
@@ -58,19 +58,21 @@ namespace WebApi.Repositories
             var points = await _dbContext.CurvePoints.ToListAsync();
             return points;
         }
+
         public async Task<CurvePoint> Get(int id)
         {
             _logger.LogInformation("Getting point with id \"{Id}\"", id);
 
             var point = await _dbContext.CurvePoints.FirstOrDefaultAsync(b => b.Id == id);
-            return point == null ? throw new BidNotFoundException() : point;
+            return point == null ? throw new EntityNotFoundException() : point;
         }
+
         public async Task<IReadOnlyCollection<CurvePoint>> Delete(int id)
         {
             _logger.LogInformation("Deleting point with id \"{Id}\"", id);
 
             var point = await _dbContext.CurvePoints.FirstOrDefaultAsync(b => b.Id == id);
-            if (point == null) throw new BidNotFoundException();
+            if (point == null) throw new EntityNotFoundException();
 
             _dbContext.CurvePoints.Remove(point);
             await _dbContext.SaveChangesAsync();

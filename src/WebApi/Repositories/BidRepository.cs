@@ -36,7 +36,7 @@ namespace WebApi.Repositories
             if (bidList == null) throw new ArgumentNullException(nameof(bidList));
 
             var bid = await _dbContext.Bids.FirstOrDefaultAsync(b => b.Id == id);
-            if (bid == null) throw new BidNotFoundException();
+            if (bid == null) throw new EntityNotFoundException();
 
             _logger.LogInformation("Updating bid {@Bid} to {@BidList}", bid, bidList);
             bid.Account = bidList.Account;
@@ -77,14 +77,14 @@ namespace WebApi.Repositories
             _logger.LogInformation("Getting bid with id \"{Id}\"", id);
 
             var bid = await _dbContext.Bids.FirstOrDefaultAsync(b => b.Id == id);
-            return bid == null ? throw new BidNotFoundException() : bid;
+            return bid == null ? throw new EntityNotFoundException() : bid;
         }
         public async Task<IReadOnlyCollection<BidList>> Delete(int id)
         {
             _logger.LogInformation("Deleting bid with id \"{Id}\"", id);
 
             var bid = await _dbContext.Bids.FirstOrDefaultAsync(b => b.Id == id);
-            if (bid == null) throw new BidNotFoundException();
+            if (bid == null) throw new EntityNotFoundException();
 
             _dbContext.Bids.Remove(bid);
             await _dbContext.SaveChangesAsync();

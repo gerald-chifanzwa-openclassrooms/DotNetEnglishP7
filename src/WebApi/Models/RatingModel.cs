@@ -1,8 +1,7 @@
-namespace Dot.Net.WebApi.Domain
+﻿namespace WebApi.Models
 {
-    public class Rating
+    public class RatingModel
     {
-        public int Id { get; set; }
         public string MoodysRating { get; set; }
         public string SandPRating { get; set; }
         public string FitchRating { get; set; }

@@ -1,58 +1,60 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
-using Dot.Net.WebApi.Controllers.Domain;
+using AutoMapper;
 using Dot.Net.WebApi.Domain;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
- 
+using WebApi.Models;
+using WebApi.Repositories;
+
 namespace Dot.Net.WebApi.Controllers
 {
     [Route("[controller]")]
-    public class RatingController : Controller
+    [ApiController]
+    public class RatingController : ControllerBase
     {
-        // TODO: Inject Rating service
+        private readonly IRatingRepository _repository;
+        private readonly IMapper _mapper;
+
+        public RatingController(IRatingRepository repository, IMapper mapper)
+        {
+            _repository = repository;
+            _mapper = mapper;
+        }
 
         [HttpGet("/rating/list")]
-        public IActionResult Home()
+        public async Task<IActionResult> Home()
         {
-            // TODO: find all Rating, add to model
-            return View("rating/list");
+            var ratings = await _repository.GetAll();
+            return Ok(ratings);
         }
 
-        [HttpGet("/rating/add")]
-        public IActionResult AddRatingForm([FromBody]Rating rating)
+        [HttpPost("/rating/add")]
+        public async Task<IActionResult> AddRating([FromBody] RatingModel model)
         {
-            return View("rating/add");
+            var rating = _mapper.Map<Rating>(model);
+            var ratings = await _repository.Add(rating);
+            return Ok(rating);
         }
 
-        [HttpGet("/rating/add")]
-        public IActionResult Validate([FromBody]Rating rating)
+        [HttpGet("/rating/{id}")]
+        public async Task<IActionResult> Get(int id)
         {
-            // TODO: check data valid and save to db, after saving return Rating list
-            return View("rating/add");
-        }
-
-        [HttpGet("/rating/update/{id}")]
-        public IActionResult ShowUpdateForm(int id)
-        {
-            // TODO: get Rating by Id and to model then show to the form
-            return View("rating/update");
+            var rating = await _repository.Get(id);
+            return Ok(rating);
         }
 
         [HttpPost("/rating/update/{id}")]
-        public IActionResult updateRating(int id, [FromBody] Rating rating)
+        public async Task<IActionResult> updateRatingAsync(int id, [FromBody] RatingModel model)
         {
-            // TODO: check required fields, if valid call service to update Rating and return Rating list
-            return Redirect("/rating/list");
+            var rating = _mapper.Map<Rating>(model);
+            var ratings = await _repository.Update(id, rating);
+            return Ok(ratings);
         }
 
         [HttpDelete("/rating/{id}")]
-        public IActionResult DeleteRating(int id)
+        public async Task<IActionResult> DeleteRating(int id)
         {
-            // TODO: Find Rating by Id and delete the Rating, return to Rating list
-            return Redirect("/rating/list");
+            var ratings = await _repository.Delete(id);
+            return Ok(ratings);
         }
     }
 }

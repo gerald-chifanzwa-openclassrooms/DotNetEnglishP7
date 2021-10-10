@@ -6,7 +6,6 @@ namespace WebApi.Repositories
 {
     public interface ICurvePointRepository
     {
-
         Task<IReadOnlyCollection<CurvePoint>> Add(CurvePoint curvePoint);
         Task<IReadOnlyCollection<CurvePoint>> Update(int id, CurvePoint curvePoint);
         Task<IReadOnlyCollection<CurvePoint>> GetAll();
