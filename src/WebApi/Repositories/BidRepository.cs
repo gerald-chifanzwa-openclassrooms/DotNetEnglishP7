@@ -1,12 +1,10 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Dot.Net.WebApi.Data;
 using Dot.Net.WebApi.Domain;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
-using WebApi.Models;
 
 namespace WebApi.Repositories
 {
@@ -74,7 +72,13 @@ namespace WebApi.Repositories
             var bids = await _dbContext.Bids.ToListAsync();
             return bids;
         }
+        public async Task<BidList> Get(int id)
+        {
+            _logger.LogInformation("Getting bid with id \"{Id}\"", id);
 
+            var bid = await _dbContext.Bids.FirstOrDefaultAsync(b => b.Id == id);
+            return bid == null ? throw new BidNotFoundException() : bid;
+        }
         public async Task<IReadOnlyCollection<BidList>> Delete(int id)
         {
             _logger.LogInformation("Deleting bid with id \"{Id}\"", id);

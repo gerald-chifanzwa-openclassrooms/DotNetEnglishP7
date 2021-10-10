@@ -9,6 +9,7 @@ namespace WebApi.Repositories
         Task<IReadOnlyCollection<BidList>> Add(BidList bidList);
         Task<IReadOnlyCollection<BidList>> Update(int id, BidList bidList);
         Task<IReadOnlyCollection<BidList>> GetAll();
+        Task<BidList> Get(int id);
         Task<IReadOnlyCollection<BidList>> Delete(int id);
     }
 }

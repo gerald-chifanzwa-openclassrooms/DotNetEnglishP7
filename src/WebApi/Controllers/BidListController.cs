@@ -28,9 +28,17 @@ namespace Dot.Net.WebApi.Controllers
             return Ok(bids);
         }
 
+
+        [HttpGet("/bidList/{id}")]
+        public async Task<IActionResult> GetAsync(int id)
+        {
+            var bid = await _bidRepository.Get(id);
+            return Ok(bid);
+        }
+
         [HttpPost("/bidList/validate")]
         [Authorize]
-        public async Task<IActionResult> Validate([FromBody]BidListModel model)
+        public async Task<IActionResult> Validate([FromBody] BidListModel model)
         {
             var bidList = _mapper.Map<BidList>(model);
             var bids = await _bidRepository.Add(bidList);
