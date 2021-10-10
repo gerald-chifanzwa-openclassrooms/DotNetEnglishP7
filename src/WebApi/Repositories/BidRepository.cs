@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Dot.Net.WebApi.Data;
@@ -74,5 +75,18 @@ namespace WebApi.Repositories
             return bids;
         }
 
+        public async Task<IReadOnlyCollection<BidList>> Delete(int id)
+        {
+            _logger.LogInformation("Deleting bid with id \"{Id}\"", id);
+
+            var bid = await _dbContext.Bids.FirstOrDefaultAsync(b => b.Id == id);
+            if (bid == null) throw new BidNotFoundException();
+
+            _dbContext.Bids.Remove(bid);
+            await _dbContext.SaveChangesAsync();
+            _logger.LogInformation("Bid Deleted {@Bid}", bid);
+
+            return await _dbContext.Bids.ToListAsync();
+        }
     }
 }

@@ -81,6 +81,23 @@ namespace WebApi.Tests.Repositories
             }
         }
 
+        [Fact]
+        public void Delete_WhenBidExists_ShouldRemoveFromList()
+        {
+            // Arrange
+            InitializeDatabase();
+            var randomId = new Random().Next(1, 10);
+            BidRepository repository = new(_mockDbContext, new NullLogger<BidRepository>());
+
+            // Act
+            var results = repository.Delete(randomId).GetAwaiter().GetResult();
+
+            // Assert
+            results.Should().HaveCount(9);
+            results.Should().NotContain(bid => bid.Id == randomId);
+        }
+
+
         private void InitializeDatabase()
         {
             var fakeBids = _bidFaker.Generate(10);

@@ -47,9 +47,10 @@ namespace Dot.Net.WebApi.Controllers
         }
 
         [HttpDelete("/bidList/{id}")]
-        public IActionResult DeleteBid(int id)
+        public async Task<IActionResult> DeleteBidAsync(int id)
         {
-            return Redirect("/bidList/list");
+            var bids = await _bidRepository.Delete(id);
+            return Ok(bids);
         }
     }
 }
