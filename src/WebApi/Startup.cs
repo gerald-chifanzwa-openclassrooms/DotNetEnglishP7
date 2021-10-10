@@ -30,12 +30,14 @@ namespace Dot.Net.WebApi
                 config.CreateMap<BidListModel, BidList>();
                 config.CreateMap<CurvePointModel, CurvePoint>();
                 config.CreateMap<RatingModel, Rating>();
+                config.CreateMap<RuleNameModel, RuleName>();
             });
             services.AddFluentValidation();
 
             services.AddScoped<IBidRepository, BidRepository>();
             services.AddScoped<ICurvePointRepository, CurvePointRepository>();
             services.AddScoped<IRatingRepository, RatingRepository>();
+            services.AddScoped<IRuleRepository, RuleRepository>();
 
             services.AddTransient<IValidator<BidListModel>, BidListModelValidator>();
             services.AddTransient<IValidator<CurvePointModel>, CurvePointModelValidator>();
