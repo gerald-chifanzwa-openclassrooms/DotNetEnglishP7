@@ -1,57 +1,63 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
+using AutoMapper;
 using Dot.Net.WebApi.Domain;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
- 
+using WebApi.Models;
+using WebApi.Repositories;
+
 namespace Dot.Net.WebApi.Controllers
 {
     [Route("[controller]")]
-    public class RuleNameController : Controller
+    [ApiController]
+    public class RuleNameController : ControllerBase
     {
+        private readonly IRuleRepository _repository;
+        private readonly IMapper _mapper;
+
+        public RuleNameController(IRuleRepository repository, IMapper mapper)
+        {
+            _repository = repository;
+            _mapper = mapper;
+        }
+
         // TODO: Inject RuleName service
 
         [HttpGet("/ruleName/list")]
-        public IActionResult Home()
+        public async Task<IActionResult> HomeAsync()
         {
-            // TODO: find all RuleName, add to model
-            return View("ruleName/list");
+            var rules = await _repository.GetAll();
+            return Ok(rules);
         }
 
-        [HttpGet("/ruleName/add")]
-        public IActionResult AddRuleName([FromBody]RuleName trade)
+        [HttpPost("/ruleName/add")]
+        public async Task<IActionResult> AddRuleNameAsync([FromBody] RuleNameModel model)
         {
-            return View("ruleName/add");
+            var rule = _mapper.Map<RuleName>(model);
+            var rules = await _repository.Add(rule);
+            return Ok(rules);
         }
 
-        [HttpGet("/ruleName/add")]
-        public IActionResult Validate([FromBody]RuleName trade)
-        {
-            // TODO: check data valid and save to db, after saving return RuleName list
-            return View("ruleName/add");
-        }
 
         [HttpGet("/ruleName/update/{id}")]
-        public IActionResult ShowUpdateForm(int id)
+        public async Task<IActionResult> GetRuleAsync(int id)
         {
-            // TODO: get RuleName by Id and to model then show to the form
-            return View("ruleName/update");
+            var rule = await _repository.Get(id);
+            return Ok(rule);
         }
 
         [HttpPost("/ruleName/update/{id}")]
-        public IActionResult updateRuleName(int id, [FromBody] RuleName rating)
+        public async Task<IActionResult> UpdateRuleNameAsync(int id, [FromBody] RuleNameModel model)
         {
-            // TODO: check required fields, if valid call service to update RuleName and return RuleName list
-            return Redirect("/ruleName/list");
+            var rule = _mapper.Map<RuleName>(model);
+            var rules = await _repository.Update(id, rule);
+            return Ok(rules);
         }
 
         [HttpDelete("/ruleName/{id}")]
-        public IActionResult DeleteRuleName(int id)
+        public async Task<IActionResult> DeleteRuleNameAsync(int id)
         {
-            // TODO: Find RuleName by Id and delete the RuleName, return to Rule list
-            return Redirect("/ruleName/list");
+            var rules = await _repository.Delete(id);
+            return Ok(rules);
         }
     }
 }

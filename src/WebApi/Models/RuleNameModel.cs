@@ -1,8 +1,7 @@
-namespace Dot.Net.WebApi.Domain
+﻿namespace WebApi.Models
 {
-    public class RuleName
+    public class RuleNameModel
     {
-        public int Id { get; set; }
         public string Name { get; set; }
         public string Description { get; set; }
         public string Json { get; set; }

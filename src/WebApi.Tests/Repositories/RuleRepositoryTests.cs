@@ -1,5 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 using Bogus;
 using Dot.Net.WebApi.Data;
 using Dot.Net.WebApi.Domain;
@@ -11,25 +14,25 @@ using Xunit;
 
 namespace WebApi.Tests.Repositories
 {
-    public class RatingRepositoryTests : IDisposable
+    public class RuleRepositoryTests : IDisposable
     {
         private readonly LocalDbContext _mockDbContext;
-        private readonly Faker<Rating> _ratingFaker;
+        private readonly Faker<RuleName> _ruleFaker;
 
-        public RatingRepositoryTests()
+        public RuleRepositoryTests()
         {
             var dbOptionsBuilder = new DbContextOptionsBuilder<LocalDbContext>();
-            dbOptionsBuilder.UseInMemoryDatabase(nameof(RatingRepositoryTests));
+            dbOptionsBuilder.UseInMemoryDatabase(nameof(RuleRepositoryTests));
             _mockDbContext = new LocalDbContext(dbOptionsBuilder.Options);
-            _ratingFaker = new Faker<Rating>();
+            _ruleFaker = new Faker<RuleName>();
         }
 
         [Fact]
-        public void GetAll_ShouldReturnRatingsInTheDatabase()
+        public void GetAll_ShouldReturnRulesInTheDatabase()
         {
             // Arrange
             InitializeDatabase();
-            RatingRepository repository = new(_mockDbContext, new NullLogger<RatingRepository>());
+            RuleRepository repository = new(_mockDbContext, new NullLogger<RuleRepository>());
 
             // Act
             var results = repository.GetAll().GetAwaiter().GetResult();
@@ -39,41 +42,41 @@ namespace WebApi.Tests.Repositories
         }
 
         [Fact]
-        public void Add_WhenRatingIsAdded_ShouldReturnRatingsCollectionIncludingAddedItem()
+        public void Add_WhenRuleIsAdded_ShouldReturnRulesCollectionIncludingAddedItem()
         {
             // Arrange
             InitializeDatabase();
-            var testRating = _ratingFaker.Generate();
-            RatingRepository repository = new(_mockDbContext, new NullLogger<RatingRepository>());
+            var testRule = _ruleFaker.Generate();
+            RuleRepository repository = new(_mockDbContext, new NullLogger<RuleRepository>());
 
             // Act
-            var results = repository.Add(testRating).GetAwaiter().GetResult();
+            var results = repository.Add(testRule).GetAwaiter().GetResult();
 
             // Assert
             results.Should().HaveCount(11);
-            results.Should().Contain(testRating);
+            results.Should().Contain(testRule);
         }
 
         [Fact]
-        public void Update_WhenRatingExists_ShouldUpdateExistingRecord()
+        public void Update_WhenRuleExists_ShouldUpdateExistingRecord()
         {
             // Arrange
             InitializeDatabase();
-            var testRating = _ratingFaker.Generate();
+            var testRule = _ruleFaker.Generate();
             var randomId = new Random().Next(1, 10);
-            RatingRepository repository = new(_mockDbContext, new NullLogger<RatingRepository>());
+            RuleRepository repository = new(_mockDbContext, new NullLogger<RuleRepository>());
 
             // Act
-            var results = repository.Update(randomId, testRating).GetAwaiter().GetResult();
+            var results = repository.Update(randomId, testRule).GetAwaiter().GetResult();
 
             // Assert
             results.Should().HaveCount(10);
             results.Should().Contain(bid => bid.Id == randomId);
             var bid = results.FirstOrDefault(bid => bid.Id == randomId);
 
-            foreach (var property in typeof(Rating).GetProperties().Where(p => p.Name != nameof(Rating.Id)))
+            foreach (var property in typeof(RuleName).GetProperties().Where(p => p.Name != nameof(RuleName.Id)))
             {
-                var expectedValue = property.GetValue(testRating);
+                var expectedValue = property.GetValue(testRule);
                 var actualValue = property.GetValue(bid);
 
                 expectedValue.Should().Be(actualValue);
@@ -81,12 +84,12 @@ namespace WebApi.Tests.Repositories
         }
 
         [Fact]
-        public void Delete_WhenRatingExists_ShouldRemoveFromList()
+        public void Delete_WhenRuleExists_ShouldRemoveFromList()
         {
             // Arrange
             InitializeDatabase();
             var randomId = new Random().Next(1, 10);
-            RatingRepository repository = new(_mockDbContext, new NullLogger<RatingRepository>());
+            RuleRepository repository = new(_mockDbContext, new NullLogger<RuleRepository>());
 
             // Act
             var results = repository.Delete(randomId).GetAwaiter().GetResult();
@@ -99,9 +102,9 @@ namespace WebApi.Tests.Repositories
 
         private void InitializeDatabase()
         {
-            var fakeRatings = _ratingFaker.Generate(10);
+            var fakeRules = _ruleFaker.Generate(10);
             _mockDbContext.Database.EnsureCreated();
-            _mockDbContext.Ratings.AddRange(fakeRatings);
+            _mockDbContext.Rules.AddRange(fakeRules);
             _mockDbContext.SaveChanges();
         }
 

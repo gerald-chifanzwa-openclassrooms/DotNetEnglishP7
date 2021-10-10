@@ -40,6 +40,7 @@ namespace Dot.Net.WebApi
             services.AddTransient<IValidator<BidListModel>, BidListModelValidator>();
             services.AddTransient<IValidator<CurvePointModel>, CurvePointModelValidator>();
             services.AddTransient<IValidator<RatingModel>, RatingModelValidator>();
+            services.AddTransient<IValidator<RuleNameModel>, RuleNameModelValidator>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
