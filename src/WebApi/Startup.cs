@@ -3,9 +3,11 @@ using FluentValidation;
 using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using WebApi.Identity;
 using WebApi.Models;
 using WebApi.Repositories;
 using WebApi.Validators;
@@ -43,6 +45,16 @@ namespace Dot.Net.WebApi
             services.AddTransient<IValidator<CurvePointModel>, CurvePointModelValidator>();
             services.AddTransient<IValidator<RatingModel>, RatingModelValidator>();
             services.AddTransient<IValidator<RuleNameModel>, RuleNameModelValidator>();
+
+            services.AddIdentity<ApplicationUser, IdentityRole>()
+                .AddDefaultTokenProviders()
+                .AddUserStore<UserStore>()
+                .AddPasswordValidator<UserPasswordValidator>();
+
+            services.AddAuthorization(options =>
+            {
+
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

@@ -1,12 +1,12 @@
 using Dot.Net.WebApi.Data;
-using System.Linq;
 using Dot.Net.WebApi.Domain;
 using System;
-using System.Collections.ObjectModel;
+using Microsoft.EntityFrameworkCore;
+using System.Threading.Tasks;
 
 namespace Dot.Net.WebApi.Repositories
 {
-    public class UserRepository
+    public class UserRepository : IUserRepository
     {
         public LocalDbContext DbContext { get; }
 
@@ -15,24 +15,28 @@ namespace Dot.Net.WebApi.Repositories
             DbContext = dbContext;
         }
 
-        public User FindByUserName(string userName)
+        public Task<User> FindByUserName(string userName)
         {
-            return DbContext.Users.Where(user => user.UserName == userName)
-                                  .FirstOrDefault();
+            return DbContext.Users.FirstOrDefaultAsync(user => user.UserName == userName);
         }
 
-        public User[] FindAll()
+        public Task<User[]> FindAll()
         {
-            return DbContext.Users.ToArray();
+            return DbContext.Users.ToArrayAsync();
         }
 
-        public void Add(User user)
+        public async Task Add(User user)
         {
+            DbContext.Users.Add(user);
+            await DbContext.SaveChangesAsync();
         }
 
-        public User FindById(int id)
+        public Task<User> FindById(int id)
         {
-            return null;
+            return DbContext.Users.FirstOrDefaultAsync(user => user.Id == id);
         }
+
+        public Task Update(User user) => throw new NotImplementedException();
+        public Task Remove(User user) => throw new NotImplementedException();
     }
 }
