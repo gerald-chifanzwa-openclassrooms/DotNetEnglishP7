@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using WebApi.Middleware;
 using WebApi.Models;
 using WebApi.Repositories;
 using WebApi.Services;
@@ -26,7 +27,8 @@ namespace Dot.Net.WebApi
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddControllers();
+            services.AddControllers()
+                    .AddMvcOptions(options => options.Filters.Add<ExceptionHandler>());
             services.AddAutoMapper(config =>
             {
                 config.CreateMap<BidListModel, BidList>();
