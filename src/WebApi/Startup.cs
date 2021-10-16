@@ -41,6 +41,7 @@ namespace Dot.Net.WebApi
             services.AddScoped<ICurvePointRepository, CurvePointRepository>();
             services.AddScoped<IRatingRepository, RatingRepository>();
             services.AddScoped<IRuleRepository, RuleRepository>();
+            services.AddScoped<ITradeRepository, TradeRepository>();
 
             services.AddScoped<IAuthenticationService, AuthenticationService>();
             services.AddTransient<IPasswordHashService, PasswordHashService>();
