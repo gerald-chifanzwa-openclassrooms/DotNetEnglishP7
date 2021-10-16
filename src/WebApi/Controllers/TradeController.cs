@@ -1,57 +1,60 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
+using AutoMapper;
 using Dot.Net.WebApi.Domain;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
- 
+using WebApi.Models;
+using WebApi.Repositories;
+
 namespace Dot.Net.WebApi.Controllers
 {
     [Route("[controller]")]
-    public class TradeController : Controller
+    [ApiController]
+    public class TradeController : ControllerBase
     {
-        // TODO: Inject Trade service
+        private readonly ITradeRepository _repository;
+        private readonly IMapper _mapper;
+
+        public TradeController(ITradeRepository repository, IMapper mapper)
+        {
+            _repository = repository;
+            _mapper = mapper;
+        }
 
         [HttpGet("/trade/list")]
-        public IActionResult Home()
+        public async Task<IActionResult> GetAll()
         {
-            // TODO: find all Trade, add to model
-            return View("trade/list");
+            var trades = await _repository.GetAll();
+            return Ok(trades);
         }
 
         [HttpGet("/trade/add")]
-        public IActionResult AddTrade([FromBody]Trade trade)
+        public async Task<IActionResult> AddTrade([FromBody] TradeModel tradeModel)
         {
-            return View("trade/add");
+            var trade = _mapper.Map<Trade>(tradeModel);
+            var trades = await _repository.Add(trade);
+            return Ok(trades);
         }
 
-        [HttpGet("/trade/add")]
-        public IActionResult Validate([FromBody]Trade trade)
+        [HttpGet("/trade/{id}")]
+        public async Task<IActionResult> GetById(int id)
         {
-            // TODO: check data valid and save to db, after saving return Trade list
-            return View("trade/add");
-        }
-
-        [HttpGet("/trade/update/{id}")]
-        public IActionResult ShowUpdateForm(int id)
-        {
-            // TODO: get Trade by Id and to model then show to the form
-            return View("trade/update");
+            var trade = await _repository.Get(id);
+            return Ok(trade);
         }
 
         [HttpPost("/trade/update/{id}")]
-        public IActionResult updateTrade(int id, [FromBody] Trade trade)
+        public async Task<IActionResult> updateTradeAsync(int id, [FromBody] TradeModel tradeModel)
         {
-            // TODO: check required fields, if valid call service to update Trade and return Trade list
-            return Redirect("/trade/list");
+            var trade = _mapper.Map<Trade>(tradeModel);
+            var trades = await _repository.Update(id, trade);
+            return Ok(trades);
         }
 
         [HttpDelete("/trade/{id}")]
-        public IActionResult DeleteTrade(int id)
+        public async Task<IActionResult> DeleteTradeAsync(int id)
         {
-            // TODO: Find Trade by Id and delete the Trade, return to Trade list
-            return Redirect("/trade/list");
+            var trades = await _repository.Delete(id);
+            return Ok(trades);
         }
     }
 }
