@@ -68,13 +68,13 @@ namespace WebApi.Tests.Repositories
 
             // Assert
             results.Should().HaveCount(10);
-            results.Should().Contain(bid => bid.Id == randomId);
-            var bid = results.FirstOrDefault(bid => bid.Id == randomId);
+            results.Should().Contain(r => r.Id == randomId);
+            var rule = results.FirstOrDefault(r => r.Id == randomId);
 
             foreach (var property in typeof(RuleName).GetProperties().Where(p => p.Name != nameof(RuleName.Id)))
             {
                 var expectedValue = property.GetValue(testRule);
-                var actualValue = property.GetValue(bid);
+                var actualValue = property.GetValue(rule);
 
                 expectedValue.Should().Be(actualValue);
             }
@@ -93,7 +93,7 @@ namespace WebApi.Tests.Repositories
 
             // Assert
             results.Should().HaveCount(9);
-            results.Should().NotContain(bid => bid.Id == randomId);
+            results.Should().NotContain(rule => rule.Id == randomId);
         }
 
 

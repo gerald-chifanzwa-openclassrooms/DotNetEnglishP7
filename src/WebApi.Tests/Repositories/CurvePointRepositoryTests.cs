@@ -71,13 +71,13 @@ namespace WebApi.Tests.Repositories
 
             // Assert
             results.Should().HaveCount(10);
-            results.Should().Contain(bid => bid.Id == randomId);
-            var bid = results.FirstOrDefault(bid => bid.Id == randomId);
+            results.Should().Contain(c => c.Id == randomId);
+            var curvePoint = results.FirstOrDefault(c => c.Id == randomId);
 
             foreach (var property in typeof(CurvePoint).GetProperties().Where(p => p.Name != nameof(CurvePoint.Id)))
             {
                 var expectedValue = property.GetValue(testCurvePoint);
-                var actualValue = property.GetValue(bid);
+                var actualValue = property.GetValue(curvePoint);
 
                 expectedValue.Should().Be(actualValue);
             }

@@ -68,13 +68,13 @@ namespace WebApi.Tests.Repositories
 
             // Assert
             results.Should().HaveCount(10);
-            results.Should().Contain(bid => bid.Id == randomId);
-            var bid = results.FirstOrDefault(bid => bid.Id == randomId);
+            results.Should().Contain(x => x.Id == randomId);
+            var rating = results.FirstOrDefault(x => x.Id == randomId);
 
             foreach (var property in typeof(Rating).GetProperties().Where(p => p.Name != nameof(Rating.Id)))
             {
                 var expectedValue = property.GetValue(testRating);
-                var actualValue = property.GetValue(bid);
+                var actualValue = property.GetValue(rating);
 
                 expectedValue.Should().Be(actualValue);
             }
