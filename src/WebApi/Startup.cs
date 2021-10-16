@@ -1,9 +1,12 @@
+using Dot.Net.WebApi.Data;
 using Dot.Net.WebApi.Domain;
+using Dot.Net.WebApi.Repositories;
 using FluentValidation;
 using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -39,11 +42,13 @@ namespace Dot.Net.WebApi
             });
             services.AddFluentValidation();
 
+            services.AddDbContext<LocalDbContext>(options => options.UseSqlServer(Configuration.GetConnectionString("DbConnection")));
             services.AddScoped<IBidRepository, BidRepository>();
             services.AddScoped<ICurvePointRepository, CurvePointRepository>();
             services.AddScoped<IRatingRepository, RatingRepository>();
             services.AddScoped<IRuleRepository, RuleRepository>();
             services.AddScoped<ITradeRepository, TradeRepository>();
+            services.AddScoped<IUserRepository, UserRepository>();
 
             services.AddScoped<IAuthenticationService, AuthenticationService>();
             services.AddTransient<IPasswordHashService, PasswordHashService>();
@@ -66,6 +71,11 @@ namespace Dot.Net.WebApi
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
+                using (var scope = app.ApplicationServices.CreateScope())
+                {
+                    var dbContext = scope.ServiceProvider.GetRequiredService<LocalDbContext>();
+                    dbContext.Database.EnsureCreated();
+                }
             }
 
             app.UseHttpsRedirection();

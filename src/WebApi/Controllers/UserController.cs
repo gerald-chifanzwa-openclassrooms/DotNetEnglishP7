@@ -1,7 +1,4 @@
-using System;
 using System.Threading.Tasks;
-using Dot.Net.WebApi.Domain;
-using Dot.Net.WebApi.Repositories;
 using Microsoft.AspNetCore.Mvc;
 using WebApi.Models;
 using WebApi.Services;
@@ -9,7 +6,8 @@ using WebApi.Services;
 namespace Dot.Net.WebApi.Controllers
 {
     [Route("[controller]")]
-    public class UserController : Controller
+    [ApiController]
+    public class UserController : ControllerBase
     {
         private readonly IUsersService _usersService;
 
