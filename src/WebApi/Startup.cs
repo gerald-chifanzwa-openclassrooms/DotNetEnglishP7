@@ -69,6 +69,7 @@ namespace Dot.Net.WebApi
             }
 
             app.UseHttpsRedirection();
+            app.UseMiddleware<RequestLoggingMiddleware>();
             app.UseAuthentication();
             app.UseRouting();
             app.UseAuthorization();
