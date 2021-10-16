@@ -17,6 +17,9 @@ namespace Dot.Net.WebApi.Repositories
 
         public Task<User> FindByUserName(string userName)
         {
+            if (string.IsNullOrEmpty(userName)) 
+                throw new ArgumentException("Username cannot be empty", nameof(userName));
+
             return DbContext.Users.FirstOrDefaultAsync(user => user.UserName == userName);
         }
 
@@ -36,7 +39,17 @@ namespace Dot.Net.WebApi.Repositories
             return DbContext.Users.FirstOrDefaultAsync(user => user.Id == id);
         }
 
-        public Task Update(User user) => throw new NotImplementedException();
-        public Task Remove(User user) => throw new NotImplementedException();
+        public async Task Update(User user)
+        {
+            if (user == null) throw new ArgumentNullException(nameof(user));
+            DbContext.Users.Update(user);
+            await DbContext.SaveChangesAsync();
+        }
+        public async Task Remove(User user)
+        {
+            if (user == null) throw new ArgumentNullException(nameof(user));
+            DbContext.Users.Remove(user);
+            await DbContext.SaveChangesAsync();
+        }
     }
 }
