@@ -1,76 +1,70 @@
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using Dot.Net.WebApi.Domain;
 using Dot.Net.WebApi.Repositories;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
- 
+using WebApi.Models;
+using WebApi.Services;
+
 namespace Dot.Net.WebApi.Controllers
 {
     [Route("[controller]")]
     public class UserController : Controller
     {
-        private UserRepository _userRepository;
+        private readonly IUsersService _usersService;
 
-        public UserController(UserRepository userRepository)
+        public UserController(IUsersService usersServie)
         {
-            _userRepository = userRepository;
+            _usersService = usersServie;
         }
 
         [HttpGet("/user/list")]
-        public IActionResult Home()
+        public async Task<IActionResult> GetAll()
         {
-            return View(_userRepository.FindAll());
+            var users = await _usersService.GetUsers();
+            return Ok(users);
         }
 
-        [HttpGet("/user/add")]
-        public IActionResult AddUser([FromBody]User user)
+        [HttpPost("/user/add")]
+        public async Task<IActionResult> AddUserAsync([FromBody] UserModel userModel)
         {
-            return View("user/add");
-        }
-
-        [HttpGet("/user/validate")]
-        public IActionResult Validate([FromBody]User user)
-        {
-            if (!ModelState.IsValid)
+            try
             {
-                return Redirect("user/add");
+                var user = await _usersService.AddUser(userModel);
+                return Ok(user);
             }
-           
-           _userRepository.Add(user);
-           
-            return Redirect("user/list");
+            catch (UsernameAlreadyTakenException ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
 
-        [HttpGet("/user/update/{id}")]
-        public IActionResult ShowUpdateForm(int id)
+        [HttpGet("/user/{id}")]
+        public async Task<IActionResult> GetAsync(int id)
         {
-            User user = _userRepository.FindById(id);
-            
-            if (user == null)
-                throw new ArgumentException("Invalid user Id:" + id);
-            
-            return View("user/update");
+            var user = await _usersService.GetUser(id);
+            return Ok(user);
         }
 
         [HttpPost("/user/update/{id}")]
-        public IActionResult updateUser(int id, [FromBody] User user)
+        public async Task<IActionResult> UpdateUserAsync(int id, [FromBody] UserModel userModel)
         {
-            // TODO: check required fields, if valid call service to update Trade and return Trade list
-            return Redirect("/trade/list");
+            try
+            {
+                var user = await _usersService.UpdateUser(id, userModel);
+                return Ok(user);
+            }
+            catch (UsernameAlreadyTakenException ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
 
         [HttpDelete("/user/{id}")]
-        public IActionResult DeleteUser(int id)
+        public async Task<IActionResult> DeleteUserAsync(int id)
         {
-            User user = _userRepository.FindById(id);
-            
-            if (user == null)
-                throw new ArgumentException("Invalid user Id:" + id);
-                        
-            return Redirect("/user/list");
+            var user = await _usersService.DeleteUser(id);
+            return Ok(user);
         }
     }
 }

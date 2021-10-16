@@ -23,7 +23,7 @@ namespace Dot.Net.WebApi.Controllers
         // TODO: Inject RuleName service
 
         [HttpGet("/ruleName/list")]
-        public async Task<IActionResult> HomeAsync()
+        public async Task<IActionResult> GetAllAsync()
         {
             var rules = await _repository.GetAll();
             return Ok(rules);
@@ -38,7 +38,7 @@ namespace Dot.Net.WebApi.Controllers
         }
 
 
-        [HttpGet("/ruleName/update/{id}")]
+        [HttpGet("/ruleName/{id}")]
         public async Task<IActionResult> GetRuleAsync(int id)
         {
             var rule = await _repository.Get(id);
