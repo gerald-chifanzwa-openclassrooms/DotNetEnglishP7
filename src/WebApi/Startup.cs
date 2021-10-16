@@ -10,6 +10,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using WebApi.Domain;
 using WebApi.Middleware;
 using WebApi.Models;
 using WebApi.Repositories;
@@ -63,6 +64,7 @@ namespace Dot.Net.WebApi
             services.AddTransient<IValidator<UserModel>, UserModelValidator>();
 
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer();
+            services.Configure<AuthenticationOptions>(Configuration.GetSection(nameof(AuthenticationOptions)));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
