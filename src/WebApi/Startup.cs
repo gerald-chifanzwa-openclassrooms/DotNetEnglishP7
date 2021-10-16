@@ -55,6 +55,7 @@ namespace Dot.Net.WebApi
             services.AddTransient<IValidator<RuleNameModel>, RuleNameModelValidator>();
             services.AddTransient<IValidator<TradeModel>, TradeModelValidator>();
             services.AddTransient<IValidator<LoginViewModel>, LoginViewModelValidator>();
+            services.AddTransient<IValidator<UserModel>, UserModelValidator>();
 
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer();
         }
