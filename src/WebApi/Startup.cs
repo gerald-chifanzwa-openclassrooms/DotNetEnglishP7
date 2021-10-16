@@ -1,15 +1,15 @@
 using Dot.Net.WebApi.Domain;
 using FluentValidation;
 using FluentValidation.AspNetCore;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using WebApi.Identity;
 using WebApi.Models;
 using WebApi.Repositories;
+using WebApi.Services;
 using WebApi.Validators;
 
 namespace Dot.Net.WebApi
@@ -33,6 +33,7 @@ namespace Dot.Net.WebApi
                 config.CreateMap<CurvePointModel, CurvePoint>();
                 config.CreateMap<RatingModel, Rating>();
                 config.CreateMap<RuleNameModel, RuleName>();
+                config.CreateMap<User, UserViewModel>();
             });
             services.AddFluentValidation();
 
@@ -41,20 +42,17 @@ namespace Dot.Net.WebApi
             services.AddScoped<IRatingRepository, RatingRepository>();
             services.AddScoped<IRuleRepository, RuleRepository>();
 
+            services.AddScoped<IAuthenticationService, AuthenticationService>();
+            services.AddTransient<IPasswordHashService, PasswordHashService>();
+            services.AddScoped<IUsersService, UsersService>();
+
             services.AddTransient<IValidator<BidListModel>, BidListModelValidator>();
             services.AddTransient<IValidator<CurvePointModel>, CurvePointModelValidator>();
             services.AddTransient<IValidator<RatingModel>, RatingModelValidator>();
             services.AddTransient<IValidator<RuleNameModel>, RuleNameModelValidator>();
+            services.AddTransient<IValidator<LoginViewModel>, LoginViewModelValidator>();
 
-            services.AddIdentity<ApplicationUser, IdentityRole>()
-                .AddDefaultTokenProviders()
-                .AddUserStore<UserStore>()
-                .AddPasswordValidator<UserPasswordValidator>();
-
-            services.AddAuthorization(options =>
-            {
-
-            });
+            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -66,11 +64,9 @@ namespace Dot.Net.WebApi
             }
 
             app.UseHttpsRedirection();
-
+            app.UseAuthentication();
             app.UseRouting();
-
             app.UseAuthorization();
-
             app.UseEndpoints(endpoints => endpoints.MapControllers());
         }
     }
