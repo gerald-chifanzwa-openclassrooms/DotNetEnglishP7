@@ -1,6 +1,7 @@
 using System.Threading.Tasks;
 using AutoMapper;
 using Dot.Net.WebApi.Domain;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using WebApi.Models;
 using WebApi.Repositories;
@@ -8,7 +9,7 @@ using WebApi.Repositories;
 namespace Dot.Net.WebApi.Controllers
 {
     [Route("[controller]")]
-    [ApiController]
+    [ApiController, Authorize]
     public class RuleNameController : ControllerBase
     {
         private readonly IRuleRepository _repository;

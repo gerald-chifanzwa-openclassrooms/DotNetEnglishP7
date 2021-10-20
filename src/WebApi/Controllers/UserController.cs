@@ -1,4 +1,5 @@
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using WebApi.Models;
 using WebApi.Services;
@@ -6,7 +7,7 @@ using WebApi.Services;
 namespace Dot.Net.WebApi.Controllers
 {
     [Route("[controller]")]
-    [ApiController]
+    [ApiController, Authorize]
     public class UserController : ControllerBase
     {
         private readonly IUsersService _usersService;

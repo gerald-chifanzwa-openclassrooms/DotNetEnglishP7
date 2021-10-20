@@ -9,7 +9,7 @@ using WebApi.Repositories;
 namespace Dot.Net.WebApi.Controllers
 {
     [Route("[controller]")]
-    [ApiController]
+    [ApiController, Authorize]
     public class BidListController : Controller
     {
         private readonly IBidRepository _bidRepository;
@@ -37,7 +37,6 @@ namespace Dot.Net.WebApi.Controllers
         }
 
         [HttpPost("/bidList/validate")]
-        [Authorize]
         public async Task<IActionResult> Validate([FromBody] BidListModel model)
         {
             var bidList = _mapper.Map<BidList>(model);

@@ -55,6 +55,7 @@ namespace WebApi.Services
                 {
                     new Claim(ClaimTypes.NameIdentifier, user.UserName),
                     new Claim(ClaimTypes.Name, user.FullName),
+                    new Claim(ClaimTypes.Role, user.Role)
                 }),
                 Expires = DateTime.UtcNow.AddHours(2),
                 Issuer = authenticationOptions.Issuer,

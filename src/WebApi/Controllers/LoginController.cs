@@ -2,6 +2,7 @@ using System.Threading.Tasks;
 using WebApi.Services;
 using Microsoft.AspNetCore.Mvc;
 using WebApi.Models;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Dot.Net.WebApi.Controllers
 {
@@ -16,7 +17,7 @@ namespace Dot.Net.WebApi.Controllers
             _authenticationService = authenticationService;
         }
 
-        [HttpPost("/login")]
+        [HttpPost("/login"), AllowAnonymous]
         public async Task<IActionResult> Login(LoginViewModel model)
         {
             var result = await _authenticationService.SignIn(model.UserName, model.Password);
