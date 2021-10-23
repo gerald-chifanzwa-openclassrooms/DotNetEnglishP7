@@ -1,3 +1,4 @@
+using System.Text;
 using Dot.Net.WebApi.Data;
 using Dot.Net.WebApi.Domain;
 using Dot.Net.WebApi.Repositories;
@@ -10,6 +11,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.IdentityModel.Tokens;
 using WebApi.Domain;
 using WebApi.Middleware;
 using WebApi.Models;
@@ -62,9 +64,24 @@ namespace Dot.Net.WebApi
             services.AddTransient<IValidator<TradeModel>, TradeModelValidator>();
             services.AddTransient<IValidator<LoginViewModel>, LoginViewModelValidator>();
             services.AddTransient<IValidator<UserModel>, UserModelValidator>();
-
-            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer();
             services.Configure<AuthenticationOptions>(Configuration.GetSection(nameof(AuthenticationOptions)));
+
+            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options =>
+            {
+                var authenticationOptions = new AuthenticationOptions();
+                Configuration.GetSection(nameof(AuthenticationOptions)).Bind(authenticationOptions);
+
+                options.TokenValidationParameters = new TokenValidationParameters
+                {
+                    ValidateIssuer = true,
+                    ValidateAudience = true,
+                    ValidateLifetime = false,
+                    ValidateIssuerSigningKey = true,
+                    ValidIssuer = authenticationOptions.Issuer,
+                    ValidAudience = authenticationOptions.Audience,
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(authenticationOptions.Key))
+                };
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
