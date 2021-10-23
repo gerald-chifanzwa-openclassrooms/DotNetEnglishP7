@@ -11,10 +11,11 @@ namespace WebApi.Validators
         {
             // Validation rules for RuleNames
             RuleFor(x => x.Name).NotEmpty();
-            RuleFor(x => x.Json).NotEmpty().Must(json =>
+            RuleFor(x => x.Json).Cascade(CascadeMode.Stop).NotEmpty().Must(json =>
             {
                 try
                 {
+                    // Try parse the json value, if it fails, validation should fail
                     JsonDocument.Parse(json);
                     return true;
                 }
