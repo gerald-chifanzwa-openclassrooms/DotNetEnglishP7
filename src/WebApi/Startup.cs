@@ -34,7 +34,7 @@ namespace Dot.Net.WebApi
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers()
-                    .AddMvcOptions(options => options.Filters.Add<ExceptionHandler>());
+                    .AddMvcOptions(options => options.Filters.Add(new ExceptionHandler()));
             services.AddAutoMapper(config =>
             {
                 config.CreateMap<BidListModel, BidList>();
