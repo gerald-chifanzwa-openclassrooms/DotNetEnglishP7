@@ -21,6 +21,10 @@ namespace Dot.Net.WebApi.Controllers
             _mapper = mapper;
         }
 
+        /// <summary>
+        /// List trades endpoint
+        /// </summary>
+        /// <returns></returns>
         [HttpGet("/trade/list")]
         public async Task<IActionResult> GetAll()
         {
@@ -28,14 +32,25 @@ namespace Dot.Net.WebApi.Controllers
             return Ok(trades);
         }
 
+        /// <summary>
+        /// Add trade endpoint
+        /// </summary>
+        /// <param name="tradeModel"></param>
+        /// <returns></returns>
         [HttpGet("/trade/add")]
         public async Task<IActionResult> AddTrade([FromBody] TradeModel tradeModel)
         {
+            // Map to Doman object
             var trade = _mapper.Map<Trade>(tradeModel);
             var trades = await _repository.Add(trade);
             return Ok(trades);
         }
 
+        /// <summary>
+        /// Get single trade endpoint
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         [HttpGet("/trade/{id}")]
         public async Task<IActionResult> GetById(int id)
         {
@@ -43,14 +58,26 @@ namespace Dot.Net.WebApi.Controllers
             return Ok(trade);
         }
 
-        [HttpPost("/trade/update/{id}")]
-        public async Task<IActionResult> updateTradeAsync(int id, [FromBody] TradeModel tradeModel)
+        /// <summary>
+        /// Update trade endpoint
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="tradeModel"></param>
+        /// <returns></returns>
+        [HttpPut("/trade/update/{id}")]
+        public async Task<IActionResult> UpdateTradeAsync(int id, [FromBody] TradeModel tradeModel)
         {
+            // Map to Doman object
             var trade = _mapper.Map<Trade>(tradeModel);
             var trades = await _repository.Update(id, trade);
             return Ok(trades);
         }
 
+        /// <summary>
+        /// Delete trade endpoint
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         [HttpDelete("/trade/{id}")]
         public async Task<IActionResult> DeleteTradeAsync(int id)
         {

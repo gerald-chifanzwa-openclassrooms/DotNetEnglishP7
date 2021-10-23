@@ -21,6 +21,10 @@ namespace Dot.Net.WebApi.Controllers
             _mapper = mapper;
         }
 
+        /// <summary>
+        /// List bidlists endpoint
+        /// </summary>
+        /// <returns></returns>
         [HttpGet("/")]
         public async Task<IActionResult> HomeAsync()
         {
@@ -28,6 +32,11 @@ namespace Dot.Net.WebApi.Controllers
             return Ok(bids);
         }
 
+        /// <summary>
+        /// Get bidlist endpoint
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
 
         [HttpGet("/bidList/{id}")]
         public async Task<IActionResult> GetAsync(int id)
@@ -36,23 +45,40 @@ namespace Dot.Net.WebApi.Controllers
             return Ok(bid);
         }
 
-        [HttpPost("/bidList/validate")]
-        public async Task<IActionResult> Validate([FromBody] BidListModel model)
+        /// <summary>
+        /// Add Bidlist endpoint
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns></returns>
+        [HttpPost("/bidList/add")]
+        public async Task<IActionResult> Add([FromBody] BidListModel model)
         {
+            // Map to Doman object
             var bidList = _mapper.Map<BidList>(model);
             var bids = await _bidRepository.Add(bidList);
             return Ok(bids);
         }
 
-
-        [HttpPost("/bidList/update/{id}")]
+        /// <summary>
+        /// Update Bidlist endpoint
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="model"></param>
+        /// <returns></returns>
+        [HttpPut("/bidList/update/{id}")]
         public async Task<IActionResult> UpdateBidAsync(int id, [FromBody] BidListModel model)
         {
+            // Map to Doman object
             var bidList = _mapper.Map<BidList>(model);
             var bids = await _bidRepository.Update(id, bidList);
             return Ok(bids);
         }
 
+        /// <summary>
+        /// Delete Bidlist endpoint
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         [HttpDelete("/bidList/{id}")]
         public async Task<IActionResult> DeleteBidAsync(int id)
         {

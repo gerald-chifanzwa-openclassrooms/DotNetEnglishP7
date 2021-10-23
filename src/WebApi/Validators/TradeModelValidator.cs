@@ -8,6 +8,7 @@ namespace WebApi.Validators
     {
         public TradeModelValidator()
         {
+            // Validation rules for Trades
             RuleFor(x => x.Account).NotEmpty();
             RuleFor(x => x.Type).NotEmpty();
             RuleFor(x => x.BuyQuantity).ValidateQuantity();

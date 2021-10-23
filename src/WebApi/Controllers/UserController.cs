@@ -1,4 +1,5 @@
 using System.Threading.Tasks;
+using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using WebApi.Models;
@@ -24,8 +25,13 @@ namespace Dot.Net.WebApi.Controllers
             return Ok(users);
         }
 
+        /// <summary>
+        /// Add user endpoint
+        /// </summary>
+        /// <param name="userModel"></param>
+        /// <returns></returns>
         [HttpPost("/user/add")]
-        public async Task<IActionResult> AddUserAsync([FromBody] UserModel userModel)
+        public async Task<IActionResult> AddUserAsync([FromBody][CustomizeValidator(RuleSet = "Create")] UserModel userModel)
         {
             try
             {
@@ -34,10 +40,16 @@ namespace Dot.Net.WebApi.Controllers
             }
             catch (UsernameAlreadyTakenException ex)
             {
+                // Username already asigned to another user in database
                 return BadRequest(ex.Message);
             }
         }
 
+        /// <summary>
+        /// Get single user endpoint
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         [HttpGet("/user/{id}")]
         public async Task<IActionResult> GetAsync(int id)
         {
@@ -45,8 +57,14 @@ namespace Dot.Net.WebApi.Controllers
             return Ok(user);
         }
 
-        [HttpPost("/user/update/{id}")]
-        public async Task<IActionResult> UpdateUserAsync(int id, [FromBody] UserModel userModel)
+        /// <summary>
+        /// Update user endpoint
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="userModel"></param>
+        /// <returns></returns>
+        [HttpPut("/user/update/{id}")]
+        public async Task<IActionResult> UpdateUserAsync(int id, [FromBody][CustomizeValidator(RuleSet = "Update")] UserModel userModel)
         {
             try
             {
@@ -59,6 +77,11 @@ namespace Dot.Net.WebApi.Controllers
             }
         }
 
+        /// <summary>
+        /// Delete user endpoint
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         [HttpDelete("/user/{id}")]
         public async Task<IActionResult> DeleteUserAsync(int id)
         {

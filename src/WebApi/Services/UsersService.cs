@@ -31,6 +31,8 @@ namespace WebApi.Services
         public async Task<UserViewModel> AddUser(UserModel userModel)
         {
             if (userModel == null) throw new ArgumentNullException(nameof(userModel));
+
+            // Ensures we do not duplicate usernames in the database
             await EnsureUsernameIsNotInUse(userModel);
 
             var user = MapUser(userModel);
@@ -86,6 +88,7 @@ namespace WebApi.Services
 
         private async Task EnsureUsernameIsNotInUse(UserModel userModel)
         {
+            // Try to get user by username to determine if username has already been used before
             var user = await _userRepository.FindByUserName(userModel.UserName);
             if (user is not null)
             {
@@ -96,6 +99,7 @@ namespace WebApi.Services
 
         private User MapUser(UserModel userModel, User user = null)
         {
+            // User will be null on creating new user, and will be already populate on updating.
             if (user == null) user = new User();
 
             user.FullName = userModel.FullName;

@@ -16,7 +16,12 @@ namespace WebApi.Services
         }
         public string Hash(string plainText)
         {
+            // Use RijndaelManaged encryption
+
+            // Seeding vector
             const string vector = "A3519D704D397195";
+
+            // Get encryption key from Configuration
             var key = _configuration.GetSection("Security:EncryptionKey").Get<string>();
             var bytes1 = Encoding.UTF8.GetBytes(vector);
             var bytes2 = Encoding.UTF8.GetBytes(plainText);

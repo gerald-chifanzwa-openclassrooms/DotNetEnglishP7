@@ -21,8 +21,10 @@ namespace Dot.Net.WebApi.Controllers
             _mapper = mapper;
         }
 
-        // TODO: Inject RuleName service
-
+        /// <summary>
+        /// List rules endpoint
+        /// </summary>
+        /// <returns></returns>
         [HttpGet("/ruleName/list")]
         public async Task<IActionResult> GetAllAsync()
         {
@@ -30,15 +32,25 @@ namespace Dot.Net.WebApi.Controllers
             return Ok(rules);
         }
 
+        /// <summary>
+        /// Add rule endpoint
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns></returns>
         [HttpPost("/ruleName/add")]
         public async Task<IActionResult> AddRuleNameAsync([FromBody] RuleNameModel model)
         {
+            // Map to Doman object
             var rule = _mapper.Map<RuleName>(model);
             var rules = await _repository.Add(rule);
             return Ok(rules);
         }
 
-
+        /// <summary>
+        /// Get rule endpoint
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         [HttpGet("/ruleName/{id}")]
         public async Task<IActionResult> GetRuleAsync(int id)
         {
@@ -46,14 +58,26 @@ namespace Dot.Net.WebApi.Controllers
             return Ok(rule);
         }
 
-        [HttpPost("/ruleName/update/{id}")]
+        /// <summary>
+        /// Update rule endpoint
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="model"></param>
+        /// <returns></returns>
+        [HttpPut("/ruleName/update/{id}")]
         public async Task<IActionResult> UpdateRuleNameAsync(int id, [FromBody] RuleNameModel model)
         {
+            // Map to Doman object
             var rule = _mapper.Map<RuleName>(model);
             var rules = await _repository.Update(id, rule);
             return Ok(rules);
         }
 
+        /// <summary>
+        /// Delete rule endpoint
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         [HttpDelete("/ruleName/{id}")]
         public async Task<IActionResult> DeleteRuleNameAsync(int id)
         {

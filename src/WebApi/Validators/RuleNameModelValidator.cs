@@ -9,6 +9,7 @@ namespace WebApi.Validators
     {
         public RuleNameModelValidator()
         {
+            // Validation rules for RuleNames
             RuleFor(x => x.Name).NotEmpty();
             RuleFor(x => x.Json).NotEmpty().Must(json =>
             {

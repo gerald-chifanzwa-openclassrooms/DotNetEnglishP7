@@ -17,11 +17,17 @@ namespace Dot.Net.WebApi.Controllers
             _authenticationService = authenticationService;
         }
 
+        /// <summary>
+        /// Login endpoint
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns></returns>
         [HttpPost("/login"), AllowAnonymous]
         public async Task<IActionResult> Login(LoginViewModel model)
         {
             var result = await _authenticationService.SignIn(model.UserName, model.Password);
 
+            // Handle results from authentication service
             return result switch
             {
                 AuthenticationResult.SuccessAuthenticationResult successResult => Ok(result),

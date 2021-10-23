@@ -21,6 +21,10 @@ namespace Dot.Net.WebApi.Controllers
             _mapper = mapper;
         }
 
+        /// <summary>
+        /// List ratings endpoint
+        /// </summary>
+        /// <returns></returns>
         [HttpGet("/rating/list")]
         public async Task<IActionResult> Home()
         {
@@ -28,14 +32,25 @@ namespace Dot.Net.WebApi.Controllers
             return Ok(ratings);
         }
 
+        /// <summary>
+        /// Add rating endpoint
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns></returns>
         [HttpPost("/rating/add")]
         public async Task<IActionResult> AddRating([FromBody] RatingModel model)
         {
+            // Map to Doman object
             var rating = _mapper.Map<Rating>(model);
             var ratings = await _repository.Add(rating);
             return Ok(rating);
         }
 
+        /// <summary>
+        /// Get rating endpoint
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         [HttpGet("/rating/{id}")]
         public async Task<IActionResult> Get(int id)
         {
@@ -43,14 +58,26 @@ namespace Dot.Net.WebApi.Controllers
             return Ok(rating);
         }
 
-        [HttpPost("/rating/update/{id}")]
-        public async Task<IActionResult> updateRatingAsync(int id, [FromBody] RatingModel model)
+        /// <summary>
+        /// Update rating endpoint
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="model"></param>
+        /// <returns></returns>
+        [HttpPut("/rating/update/{id}")]
+        public async Task<IActionResult> UpdateRatingAsync(int id, [FromBody] RatingModel model)
         {
+            // Map to Doman object
             var rating = _mapper.Map<Rating>(model);
             var ratings = await _repository.Update(id, rating);
             return Ok(ratings);
         }
 
+        /// <summary>
+        /// Delete endpoint
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         [HttpDelete("/rating/{id}")]
         public async Task<IActionResult> DeleteRating(int id)
         {

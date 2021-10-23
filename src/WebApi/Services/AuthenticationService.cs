@@ -29,12 +29,17 @@ namespace WebApi.Services
 
         public async Task<AuthenticationResult> SignIn(string username, string password)
         {
+            // First find the user by the supplied username
             var user = await _repository.FindByUserName(username);
+            
+            // If user cannot be found, return authentication failure
             if (user == null)
                 return AuthenticationResult.Failure("Invalid username or password");
 
+            // Hash the given password and compare with the one from the database
             var hash = _passwordHasher.Hash(password);
 
+            // If the hashes match, authenticate user, otherwise authentication failure
             if (!string.Equals(hash, user.Password, StringComparison.InvariantCulture))
                 return AuthenticationResult.Failure("Invalid username or password");
 
@@ -45,6 +50,7 @@ namespace WebApi.Services
 
         private string GenerateToken(User user)
         {
+            // Load token generation parameters from configuration
             var authenticationOptions = _authenticationOptions.Value;
             var securityKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(authenticationOptions.Key));
 
@@ -55,6 +61,7 @@ namespace WebApi.Services
 
             var tokenDescriptor = new SecurityTokenDescriptor
             {
+                // Add user details to be part of the token
                 Subject = new ClaimsIdentity(new Claim[]
                 {
                     new Claim(ClaimTypes.NameIdentifier, user.UserName),
