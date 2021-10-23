@@ -46,9 +46,13 @@ namespace WebApi.Services
         private string GenerateToken(User user)
         {
             var authenticationOptions = _authenticationOptions.Value;
-            var mySecurityKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(authenticationOptions.Key));
+            var securityKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(authenticationOptions.Key));
 
             var tokenHandler = new JwtSecurityTokenHandler();
+            var tokenLifeSpan = (authenticationOptions.TokenLifespan ?? TimeSpan.Zero) > TimeSpan.Zero ?
+                authenticationOptions.TokenLifespan.Value :
+                TimeSpan.FromHours(1);
+
             var tokenDescriptor = new SecurityTokenDescriptor
             {
                 Subject = new ClaimsIdentity(new Claim[]
@@ -57,10 +61,10 @@ namespace WebApi.Services
                     new Claim(ClaimTypes.Name, user.FullName),
                     new Claim(ClaimTypes.Role, user.Role)
                 }),
-                Expires = DateTime.UtcNow.AddHours(2),
+                Expires = DateTime.UtcNow.Add(tokenLifeSpan),
                 Issuer = authenticationOptions.Issuer,
                 Audience = authenticationOptions.Audience,
-                SigningCredentials = new SigningCredentials(mySecurityKey, SecurityAlgorithms.HmacSha256Signature)
+                SigningCredentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256Signature)
             };
 
             var token = tokenHandler.CreateToken(tokenDescriptor);
