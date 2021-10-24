@@ -19,6 +19,7 @@ namespace WebApi.Repositories
             _logger = logger;
         }
 
+        /// <inheritdoc/>
         public async Task<IReadOnlyCollection<BidList>> Add(BidList bidList)
         {
             if (bidList == null) throw new ArgumentNullException(nameof(bidList));
@@ -31,6 +32,7 @@ namespace WebApi.Repositories
             return await _dbContext.Bids.ToListAsync();
         }
 
+        /// <inheritdoc/>
         public async Task<IReadOnlyCollection<BidList>> Update(int id, BidList bidList)
         {
             if (bidList == null) throw new ArgumentNullException(nameof(bidList));
@@ -66,12 +68,15 @@ namespace WebApi.Repositories
             return await _dbContext.Bids.ToListAsync();
         }
 
+        /// <inheritdoc/>
         public async Task<IReadOnlyCollection<BidList>> GetAll()
         {
             _logger.LogInformation("Listing bids in the databaase");
             var bids = await _dbContext.Bids.ToListAsync();
             return bids;
         }
+
+        /// <inheritdoc/>
         public async Task<BidList> Get(int id)
         {
             _logger.LogInformation("Getting bid with id \"{Id}\"", id);
@@ -79,6 +84,8 @@ namespace WebApi.Repositories
             var bid = await _dbContext.Bids.FirstOrDefaultAsync(b => b.Id == id);
             return bid == null ? throw new EntityNotFoundException() : bid;
         }
+
+        /// <inheritdoc/>
         public async Task<IReadOnlyCollection<BidList>> Delete(int id)
         {
             _logger.LogInformation("Deleting bid with id \"{Id}\"", id);

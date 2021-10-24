@@ -19,6 +19,7 @@ namespace WebApi.Repositories
             _logger = logger;
         }
 
+        /// <inheritdoc/> 
         public async Task<IReadOnlyCollection<Rating>> Add(Rating rating)
         {
             if (rating == null) throw new ArgumentNullException(nameof(rating));
@@ -31,6 +32,7 @@ namespace WebApi.Repositories
             return await _dbContext.Ratings.ToListAsync();
         }
 
+        /// <inheritdoc/> 
         public async Task<IReadOnlyCollection<Rating>> Update(int id, Rating rating)
         {
             if (rating == null) throw new ArgumentNullException(nameof(rating));
@@ -51,6 +53,7 @@ namespace WebApi.Repositories
             return await _dbContext.Ratings.ToListAsync();
         }
 
+        /// <inheritdoc/> 
         public async Task<IReadOnlyCollection<Rating>> GetAll()
         {
             _logger.LogInformation("Listing ratings in the databaase");
@@ -58,6 +61,7 @@ namespace WebApi.Repositories
             return ratings;
         }
 
+        /// <inheritdoc/> 
         public async Task<Rating> Get(int id)
         {
             _logger.LogInformation("Getting rating with id \"{Id}\"", id);
@@ -66,6 +70,7 @@ namespace WebApi.Repositories
             return rating == null ? throw new EntityNotFoundException() : rating;
         }
 
+        /// <inheritdoc/> 
         public async Task<IReadOnlyCollection<Rating>> Delete(int id)
         {
             _logger.LogInformation("Deleting rating with id \"{Id}\"", id);

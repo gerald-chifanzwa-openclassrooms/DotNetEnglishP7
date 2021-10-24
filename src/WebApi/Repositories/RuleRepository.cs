@@ -19,6 +19,7 @@ namespace WebApi.Repositories
             _logger = logger;
         }
 
+        /// <inheritdoc/> 
         public async Task<IReadOnlyCollection<RuleName>> Add(RuleName rule)
         {
             if (rule == null) throw new ArgumentNullException(nameof(rule));
@@ -31,6 +32,7 @@ namespace WebApi.Repositories
             return await _dbContext.Rules.ToListAsync();
         }
 
+        /// <inheritdoc/> 
         public async Task<IReadOnlyCollection<RuleName>> Update(int id, RuleName rule)
         {
             if (rule == null) throw new ArgumentNullException(nameof(rule));
@@ -53,6 +55,7 @@ namespace WebApi.Repositories
             return await _dbContext.Rules.ToListAsync();
         }
 
+        /// <inheritdoc/> 
         public async Task<IReadOnlyCollection<RuleName>> GetAll()
         {
             _logger.LogInformation("Listing rules in the databaase");
@@ -60,6 +63,7 @@ namespace WebApi.Repositories
             return rules;
         }
 
+        /// <inheritdoc/> 
         public async Task<RuleName> Get(int id)
         {
             _logger.LogInformation("Getting rule with id \"{Id}\"", id);
@@ -68,6 +72,7 @@ namespace WebApi.Repositories
             return rule == null ? throw new EntityNotFoundException() : rule;
         }
 
+        /// <inheritdoc/> 
         public async Task<IReadOnlyCollection<RuleName>> Delete(int id)
         {
             _logger.LogInformation("Deleting rule with id \"{Id}\"", id);

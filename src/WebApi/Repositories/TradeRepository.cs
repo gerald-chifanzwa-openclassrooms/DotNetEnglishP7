@@ -19,6 +19,7 @@ namespace WebApi.Repositories
             _logger = logger;
         }
 
+        /// <inheritdoc/> 
         public async Task<IReadOnlyCollection<Trade>> Add(Trade trade)
         {
             if (trade == null) throw new ArgumentNullException(nameof(trade));
@@ -31,6 +32,7 @@ namespace WebApi.Repositories
             return await _dbContext.Trades.ToListAsync();
         }
 
+        /// <inheritdoc/> 
         public async Task<IReadOnlyCollection<Trade>> Update(int id, Trade trade)
         {
             if (trade == null) throw new ArgumentNullException(nameof(trade));
@@ -66,6 +68,7 @@ namespace WebApi.Repositories
             return await _dbContext.Trades.ToListAsync();
         }
 
+        /// <inheritdoc/> 
         public async Task<IReadOnlyCollection<Trade>> GetAll()
         {
             _logger.LogInformation("Listing trades in the databaase");
@@ -73,6 +76,7 @@ namespace WebApi.Repositories
             return rules;
         }
 
+        /// <inheritdoc/> 
         public async Task<Trade> Get(int id)
         {
             _logger.LogInformation("Getting trade with id \"{Id}\"", id);
@@ -81,6 +85,7 @@ namespace WebApi.Repositories
             return trade == null ? throw new EntityNotFoundException() : trade;
         }
 
+        /// <inheritdoc/> 
         public async Task<IReadOnlyCollection<Trade>> Delete(int id)
         {
             _logger.LogInformation("Deleting trade with id \"{Id}\"", id);

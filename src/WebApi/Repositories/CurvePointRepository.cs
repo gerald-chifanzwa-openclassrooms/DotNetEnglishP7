@@ -19,6 +19,7 @@ namespace WebApi.Repositories
             _logger = logger;
         }
 
+        /// <inheritdoc/> 
         public async Task<IReadOnlyCollection<CurvePoint>> Add(CurvePoint curvePoint)
         {
             if (curvePoint == null) throw new ArgumentNullException(nameof(curvePoint));
@@ -31,6 +32,7 @@ namespace WebApi.Repositories
             return await _dbContext.CurvePoints.ToListAsync();
         }
 
+        /// <inheritdoc/> 
         public async Task<IReadOnlyCollection<CurvePoint>> Update(int id, CurvePoint curvePoint)
         {
             if (curvePoint == null) throw new ArgumentNullException(nameof(curvePoint));
@@ -52,6 +54,7 @@ namespace WebApi.Repositories
             return await _dbContext.CurvePoints.ToListAsync();
         }
 
+        /// <inheritdoc/> 
         public async Task<IReadOnlyCollection<CurvePoint>> GetAll()
         {
             _logger.LogInformation("Listing points in the databaase");
@@ -59,6 +62,7 @@ namespace WebApi.Repositories
             return points;
         }
 
+        /// <inheritdoc/> 
         public async Task<CurvePoint> Get(int id)
         {
             _logger.LogInformation("Getting point with id \"{Id}\"", id);
@@ -67,6 +71,7 @@ namespace WebApi.Repositories
             return point == null ? throw new EntityNotFoundException() : point;
         }
 
+        /// <inheritdoc/> 
         public async Task<IReadOnlyCollection<CurvePoint>> Delete(int id)
         {
             _logger.LogInformation("Deleting point with id \"{Id}\"", id);
